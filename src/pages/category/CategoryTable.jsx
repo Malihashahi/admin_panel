@@ -1,4 +1,3 @@
-
 import React from "react";
 import PaginatedTable from "../../components/PaginatedTable";
 import Addcategory from "./AddCategory";
@@ -59,7 +58,6 @@ const Categorytable = () => {
   ];
 
   const additionalElements = (itemId) => {
-    console.log(itemId);
     return (
       <>
         <i
