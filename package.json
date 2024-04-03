@@ -10,6 +10,7 @@
     "bootstrap": "^5.3.3",
     "chart.js": "^3.7.1",
     "formik": "^2.4.5",
+    "jalali-moment": "^3.3.11",
     "react": "^18.0.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.0.0",
