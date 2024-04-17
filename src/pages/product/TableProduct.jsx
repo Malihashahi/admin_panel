@@ -1,8 +1,9 @@
-
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import PaginatedDataTable from "../../components/PaginatedDataTable";
-import { getProductsService } from "../../services/products";
+import { deleteProductService, getProductsService } from "../../services/products";
+import { Alert, Confirm } from "../../utils/alerts";
 import AddProduct from "./AddProduct";
 import Actions from "./tableAddition/Actions";
 
@@ -11,7 +12,7 @@ const TableProduct = () => {
   const [loading, setLoading] = useState(false);
   const [searchChar, setSearchChar] = useState("") 
   const [currentPage, setCurrentPage] = useState(1) // صفحه حال حاضر
-  const [countOnPage, setCountOnPage] = useState(1) // تعداد محصول در هر صفحه
+  const [countOnPage, setCountOnPage] = useState(10) // تعداد محصول در هر صفحه
   const [pageCount, setPageCount] = useState(0) // تعداد کل صفحات
 
   const dataInfo = [
@@ -27,7 +28,7 @@ const TableProduct = () => {
     {
       field: null,
       title: "عملیات",
-      elements: (rowData) => <Actions rowData={rowData}/>,
+      elements: (rowData) => <Actions rowData={rowData} handleDeleteProduct={handleDeleteProduct}/>,
     },
   ];
   const searchParams = {
@@ -50,6 +51,16 @@ const TableProduct = () => {
     handleGetProducts(1, countOnPage, char)
   }
 
+  const handleDeleteProduct = async (product)=>{
+    if (await Confirm("حذف محصول",`آیا از حذف ${product.title} اطمینان دارید؟`)) {
+      const res = await deleteProductService(product.id);
+      if (res.status === 200) {
+        Alert("انجام شد", res.data.message, "success");
+        handleGetProducts(currentPage, countOnPage, searchChar)
+      }
+    }
+  }
+
   useEffect(()=>{
     handleGetProducts(currentPage, countOnPage, searchChar)
   },[currentPage])
@@ -65,7 +76,11 @@ const TableProduct = () => {
     pageCount={pageCount}
     handleSearch={handleSearch}
     >
-      <AddProduct/>
+      <Link to="/products/add-product">
+          <a className="btn btn-success d-flex justify-content-center align-items-center">
+              <i className="fas fa-plus text-light"></i>
+          </a>
+      </Link>
     </PaginatedDataTable>
   );
 };
