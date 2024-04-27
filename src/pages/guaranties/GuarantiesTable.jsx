@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import PaginatedTable from "../../components/PaginatedTable";
 import { deleteGuaranteeService, getAllGuaranteesService } from "../../services/guarantees";
@@ -17,10 +16,8 @@ const GuarantiesTable = () => {
       { field: "descriptions", title: "توضیحات" },
       { field: "length", title: "مدت گارانتی" },
       { field: "length_unit", title: "واحد" },
-    ];
-  
-    const additionField = [
       {
+        field:null,
         title: "عملیات",
         elements: (rowData) => <Actions rowData={rowData} setGuaranteeToEdit={setGuaranteeToEdit} handleDeleteGuarantee={handleDeleteGuarantee}/>,
       },
@@ -58,7 +55,6 @@ const GuarantiesTable = () => {
     <PaginatedTable
       data={data}
       dataInfo={dataInfo}
-      additionField={additionField}
       numOfPAge={8}
       searchParams={searchParams}
       loading={loading}
