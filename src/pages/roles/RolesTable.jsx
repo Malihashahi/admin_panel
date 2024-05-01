@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AddButtonLink from "../../components/AddButtonLink";
 import PaginatedTable from "../../components/PaginatedTable";
-import { getAllRolesService } from "../../services/users";
+import { deleteRoleService, getAllRolesService } from "../../services/users";
 import { Alert, Confirm } from "../../utils/alerts";
 import AddRole from "./AddRole";
 import Actions from "./tableAddition/Actions";
@@ -35,12 +35,19 @@ const RolesTable = () => {
       const res = await getAllRolesService();
       res && setLoading(false)
       if (res.status === 200) {
-        console.log(res.data.data);
           setData(res.data.data);
       }
     }
   
-    const handleDeleteRole = async () => {};
+    const handleDeleteRole = async (role) => {
+      if (await Confirm(role.title, 'آیا از حذف این نقش اطمینان دارید؟')) {
+        const res = await deleteRoleService(role.id)
+        if (res.status === 200) {
+          Alert('انجام شد', res.data.message, 'success')
+          setData(old=>old.filter(d=>d.id != role.id))
+        }
+      }
+    };
   
     useEffect(()=>{
         handleGetAllRoles()
