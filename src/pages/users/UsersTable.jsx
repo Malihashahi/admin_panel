@@ -1,12 +1,12 @@
-
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link , Outlet} from "react-router-dom";
 import AddButtonLink from "../../components/AddButtonLink";
 import PaginatedDataTable from "../../components/PaginatedDataTable";
-import { getAllPaginatedUsersService, getAllUsersService } from "../../services/users";
+import { deleteUserService, getAllPaginatedUsersService, getAllUsersService } from "../../services/users";
 import { Alert, Confirm } from "../../utils/alerts";
 import Actions from "./tableAddition/Actions";
+import Roles from "./tableAddition/Roles";
 
 const UsersTable = () => {
   const [data, setData] = useState([]);
@@ -23,6 +23,11 @@ const UsersTable = () => {
       field: null,
       title: "نام",
       elements: (rowData) => `${rowData.first_name || ""} ${rowData.last_name || ""}`,
+    },
+    {
+      field: null,
+      title: "نقش",
+      elements: (rowData) => <Roles rowData={rowData}/>,
     },
     { field: "phone", title: "شماره تلفن" },
     { field: "email", title: "ایمیل" },
@@ -45,7 +50,6 @@ const UsersTable = () => {
   const handleGetUsers = async (page, count, char)=>{
     setLoading(true)
     const res = await getAllPaginatedUsersService(page, count, char)
-    console.log(res);
     res && setLoading(false)
     if (res.status === 200) {
       setData(res.data.data.data)
@@ -58,15 +62,16 @@ const UsersTable = () => {
     handleGetUsers(1, countOnPage, char)
   }
 
-  const handleDeleteUser = async (product)=>{
-    // if (await Confirm("حذف کاربر",`آیا از حذف ${product.title} اطمینان دارید؟`)) {
-    //   const res = await deleteProductService(product.id);
-    //   if (res.status === 200) {
-    //     Alert("انجام شد", res.data.message, "success");
-    //     handleGetProducts(currentPage, countOnPage, searchChar)
-    //   }
-    // }
+  const handleDeleteUser = async (user)=>{
+    if (await Confirm("حذف کاربر",`آیا از حذف ${user.user_name} اطمینان دارید؟`)) {
+      const res = await deleteUserService(user.id);
+      if (res.status === 200) {
+        Alert("انجام شد", res.data.message, "success");
+        handleGetUsers(currentPage, countOnPage, searchChar)
+      }
+    }
   }
+
 
   useEffect(()=>{
     handleGetUsers(currentPage, countOnPage, searchChar)
@@ -83,7 +88,8 @@ const UsersTable = () => {
     pageCount={pageCount}
     handleSearch={handleSearch}
     >
-      <AddButtonLink href={"/products/add-user"}/>
+      <AddButtonLink href={"/users/add-user"}/>
+      <Outlet context={{setData}}/>
     </PaginatedDataTable>
   );
 };
