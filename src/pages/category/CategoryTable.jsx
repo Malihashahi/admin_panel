@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import PaginatedTable from "../../components/PaginatedTable";
+import { useHasPermission } from "../../hook/permissionsHook";
 import { deleteCategoryService, getCategoriesService } from "../../services/category";
 import { Alert, Confirm } from "../../utils/alerts";
 import { convertDateToJalali } from "../../utils/convertDate";
@@ -13,6 +14,9 @@ const Categorytable = () => {
   const [data, setData] = useState([]);
   const [forceRender, setForceRender] = useState(0);
   const [loading , setLoading] = useState(false)
+
+  const hasAddCategoryPerm = useHasPermission("create_category")
+
   const handleGetCategories = async () => {
     setLoading(true)
     try {
@@ -49,18 +53,18 @@ const Categorytable = () => {
     { field: "id", title: "#" },
     { field: "title", title: "عنوان محصول" },
     { field: "parent_id", title: "والد" },
-  ];
-
-  const additionField = [
     {
+      field:null,
       title: "تاریخ",
       elements: (rowData) => convertDateToJalali(rowData.created_at),
     },
     {
+      field:null,
       title: "نمایش در منو",
       elements: (rowData) => <ShowInMenu rowData={rowData} />,
     },
     {
+      field:null,
       title: "عملیات",
       elements: (rowData) => <Actions rowData={rowData} handleDeleteCategory={handleDeleteCategory}/>,
     },
@@ -78,12 +82,11 @@ const Categorytable = () => {
       <PaginatedTable
         data={data}
         dataInfo={dataInfo}
-        additionField={additionField}
         numOfPAge={8}
         searchParams={searchParams}
         loading={loading}
       >
-        <Addcategory setForceRender={setForceRender} />
+        {hasAddCategoryPerm && <Addcategory setForceRender={setForceRender} />}
       </PaginatedTable>
     </>
   );
