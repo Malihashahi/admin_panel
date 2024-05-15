@@ -1,3 +1,4 @@
+
 import httpService from "./httpService";
 
 export const getAllDiscountsService = () => {
@@ -7,6 +8,10 @@ export const getAllDiscountsService = () => {
 export const addNewDiscountService = (data)=>{
   return httpService("/admin/discounts", 'post', data)
 }
+
+export const getOneDiscountService = (discountId) => {
+  return httpService(`/admin/discounts/${discountId}`, "get");
+};
 
 export const deleteDiscountService = (discountId)=>{
   return httpService(`/admin/discounts/${discountId}`, 'delete')
