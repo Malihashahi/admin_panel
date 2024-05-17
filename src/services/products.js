@@ -1,4 +1,3 @@
-
 import { convertDataToFormdata } from "../utils/convertData";
 import httpService from "./httpService";
 
@@ -40,4 +39,11 @@ export const deleteProductImageService = (imageId)=>{
 
 export const setMainProductImageService = (imageId)=>{
   return httpService(`/admin/products/gallery/set_main/${imageId}`, 'get')
+}
+
+export const getFewerProductsService = ()=>{
+  return httpService(`/admin/products/fewer_products`, 'get')
+}
+export const toggleNotificationService = (productId)=>{
+  return httpService(`/admin/products/toggle_notification/${productId}`, 'get')
 }
