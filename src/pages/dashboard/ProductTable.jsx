@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import ActionIcon from "../../components/ActionIcon";
 import SpinnerLoad from "../../components/SpinnerLoad";
@@ -15,7 +16,6 @@ const ProductTable = () => {
     setLoading(false)
     if (res.status == 200) {
       const products = res.data.data
-      console.log(products);
       products.length > 0 ? setFewerProducts(products) : setFewerProducts([])
     }
   }
@@ -55,7 +55,7 @@ const ProductTable = () => {
               fewerProducts.map(p=>(
               <tr key={p.id}>
                 <td>{p.id}</td>
-                <td>{p.categories[0].title}</td>
+                <td>{p.categories[0]?.title}</td>
                 <td>{p.title}</td>
                 <td>{p.stock === 0 ? (
                   <span className="text-danger">پایان یافته</span>
